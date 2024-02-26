@@ -1,46 +1,63 @@
-import React, { useState } from "react";
+
 import { useContextMode } from "../../context/GlobalContext";
-// import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 const TransacctionForm = () => {
-  // const {
-  //   reset,
-  // } = useForm();
-  const { addTransaction } = useContextMode();
-  const [description, setDescription] = useState();
-  const [amount, setAmount] = useState(0);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const { addTransaction } = useContextMode();
+
+
+  const submit = (e) => {
+   
     addTransaction({
       id: window.crypto.randomUUID(),
-      description,
-      amount: parseFloat(amount),
+      description: e.description,
+      amount: parseFloat(e.amount),
     });
-    setAmount(0);
-    setDescription("");
+    reset();
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(submit)} id="form">
         <input
-          className="bg-zinc-600 text-white px-3 py-2 rounded-lg block my-2 w-full"
+          className={` bg-zinc-600 text-white px-3 py-2 rounded-lg block my-2 w-full outline-none ${
+            errors.description ? "border-red-600 border border-x-2 mb-0" : ""
+          }`}
           type="text"
-          value={description}
+          
           placeholder="Descripción"
-          onChange={(e) => setDescription(e.target.value)}
+          name="description"
+          {...register("description", {
+            required: "La descripción es requerida",
+          })}
         />
+        {errors.description && (
+          <small className="text-red-600">{errors.description.message}</small>
+        )}
         <input
-          value={amount}
-          className="bg-zinc-600 text-white px-3 py-2 rounded-lg block mb-2 w-full"
+          
+          className={` bg-zinc-600 text-white px-3 py-2 rounded-lg block my-2 w-full outline-none ${
+            errors.amount ? "border-red-600 border border-x-2 mb-0" : ""
+          }`}
           type="number"
-          name=""
+          name="amount"
           id=""
           placeholder="00.00"
           step="0.01"
-          onChange={(e) => setAmount(e.target.value)}
+          {...register("amount", {
+            required: "El monto es requerido",
+          })}
         />
+        {errors.amount && (
+          <small className="text-red-600">{errors.amount.message}</small>
+        )}
         <button className="bg-indigo-700 text-white px-3 py-2 rounded-lg block mb-2 w-full">
           Añadir
         </button>

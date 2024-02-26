@@ -20,11 +20,11 @@ const GastosIngresos = () => {
 
   return (
     <>
-      <div className="flex justify-between my-2">
+      <div className="flex justify-between my-2 balance">
         <h4 >Ingresos: </h4>
         ${ingresos}
       </div>
-      <div className="flex justify-between my-2">
+      <div className="flex justify-between my-2 balance">
         <h4>Gastos: </h4>
         ${-gastos}
       </div>
